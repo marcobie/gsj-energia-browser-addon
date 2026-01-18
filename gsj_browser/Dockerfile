@@ -4,9 +4,9 @@ RUN pip install fastapi uvicorn
 
 WORKDIR /app
 
-COPY server.py /app/server.py
-COPY run.sh /app/run.sh
+COPY server.py .
+COPY run.sh .
 
-RUN chmod +x /app/run.sh
+RUN sed -i 's/\r$//' run.sh && chmod +x run.sh
 
-CMD ["/app/run.sh"]
+CMD ["bash", "/app/run.sh"]
