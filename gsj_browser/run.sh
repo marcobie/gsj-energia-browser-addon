@@ -1,3 +1,3 @@
 #!/usr/bin/with-contenv bash
-echo "GSJ Browser add-on starting..."
-sleep infinity
+echo "Starting GSJ Browser API..."
+uvicorn server:app --host 0.0.0.0 --port 8124
