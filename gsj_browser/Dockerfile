@@ -3,6 +3,9 @@ FROM mcr.microsoft.com/playwright/python:v1.41.0-jammy
 # Doinstaluj biblioteki Pythona
 RUN pip install fastapi uvicorn playwright
 
+# Zainstaluj silnik przeglądarki
+RUN playwright install chromium
+
 WORKDIR /app
 
 COPY server.py .
