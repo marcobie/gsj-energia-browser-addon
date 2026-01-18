@@ -1,0 +1,1 @@
+# gsj-energia-browser-addon
