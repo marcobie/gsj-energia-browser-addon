@@ -2,10 +2,11 @@ FROM mcr.microsoft.com/playwright/python:v1.41.0-jammy
 
 RUN pip install fastapi uvicorn
 
-COPY server.py /app/server.py
-COPY run.sh /run.sh
-
 WORKDIR /app
-RUN chmod +x /run.sh
 
-CMD ["/run.sh"]
+COPY server.py /app/server.py
+COPY run.sh /app/run.sh
+
+RUN chmod +x /app/run.sh
+
+CMD ["/app/run.sh"]
