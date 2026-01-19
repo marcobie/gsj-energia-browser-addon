@@ -1,4 +1,4 @@
-import asyncio
+import json
 import os
 from fastapi import FastAPI, HTTPException
 from playwright.async_api import async_playwright
@@ -17,11 +17,16 @@ page = None
 session_cookies = {}
 
 def load_secrets():
-    username = os.environ.get("GSJ_USERNAME")
-    password = os.environ.get("GSJ_PASSWORD")
-    if not username or not password:
-        raise RuntimeError("Brak GSJ_USERNAME lub GSJ_PASSWORD w konfiguracji add-onu")
-    return username, password
+    try:
+        with open("/data/options.json", "r") as f:
+            opts = json.load(f)
+        username = opts.get("username")
+        password = opts.get("password")
+        if not username or not password:
+            raise RuntimeError("Brak username lub password w konfiguracji add-onu")
+        return username, password
+    except Exception as e:
+        raise RuntimeError(f"Błąd odczytu konfiguracji add-onu: {e}")
 
 async def login():
     global playwright, browser, context, page, session_cookies
