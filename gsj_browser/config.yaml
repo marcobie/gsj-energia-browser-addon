@@ -1,5 +1,5 @@
 name: "GSJ Energia Browser Login"
-version: "0.1.0"
+version: "0.2.0"
 slug: "gsj_browser"
 description: "Headless browser (Playwright) for automatic login to GSJ Energia"
 arch:
@@ -9,7 +9,11 @@ arch:
 startup: services
 boot: auto
 init: false
-options: {}
-schema: {}
 ports:
   8124/tcp: 8124
+options:
+  username: ""
+  password: ""
+schema:
+  username: str
+  password: password
