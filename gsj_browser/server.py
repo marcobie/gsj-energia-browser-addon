@@ -3,7 +3,6 @@ import os
 from fastapi import FastAPI, HTTPException
 from playwright.async_api import async_playwright
 import httpx
-import yaml
 
 DEVICE_ID = 414
 DEVICE_NAME = "GSJ_ANT_ZAW_407"
@@ -18,9 +17,11 @@ page = None
 session_cookies = {}
 
 def load_secrets():
-    with open("/config/secrets.yaml", "r") as f:
-        data = yaml.safe_load(f)
-    return data["gsj_username"], data["gsj_password"]
+    username = os.environ.get("GSJ_USERNAME")
+    password = os.environ.get("GSJ_PASSWORD")
+    if not username or not password:
+        raise RuntimeError("Brak GSJ_USERNAME lub GSJ_PASSWORD w konfiguracji add-onu")
+    return username, password
 
 async def login():
     global playwright, browser, context, page, session_cookies
@@ -42,7 +43,7 @@ async def login():
     session_cookies = {c["name"]: c["value"] for c in cookies}
 
     if "gsj_session" not in session_cookies:
-        raise RuntimeError("Login failed – no session cookie")
+        raise RuntimeError("Logowanie nie powiodło się – brak ciasteczka sesji gsj_session")
 
 async def ensure_login():
     if not session_cookies:
@@ -75,7 +76,10 @@ async def sensors():
     data = await gsj_get(f"/get-device-params?deviceName={DEVICE_NAME}")
 
     def val(key):
-        return float(data.get(key, 0))
+        try:
+            return float(data.get(key, 0))
+        except:
+            return 0.0
 
     return {
         "temperatura_zew": val("TEMPERATURA_ZEW"),
